@@ -1,0 +1,14 @@
+fastapi[all]
+groq
+python-dotenv
+sentence-transformers
+langchain
+pypdf
+pinecone[grpc]
+langchain-pinecone
+langchain-openai
+langchain-experimental
+langchain-pinecone
+langchain-groq
+langchain-community
+pandas
