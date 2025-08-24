@@ -10,6 +10,7 @@ from routes.marketing_chatbot_routes import router as marketing_chatbot_router
 from routes.generate_taglines import router as generate_taglines_router
 from routes.seo_routes import router as seo_routes
 load_dotenv()
+import httpx, asyncio
 
 app = FastAPI()
 
@@ -20,6 +21,23 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+@app.get("/health")
+async def health():
+    return {"status": "ok"}
+
+async def keep_alive():
+    while True:
+        try:
+            async with httpx.AsyncClient() as client:
+                await client.get("https://luminary-ai-backend.onrender.com/health")
+        except Exception as e:
+            print("Keep-alive ping failed:", e)
+        await asyncio.sleep(600)  # every 10 minutes
+
+@app.on_event("startup")
+async def startup_event():
+    asyncio.create_task(keep_alive())
 
 @app.get("/api/home")
 def read_root():
